@@ -68,16 +68,8 @@ describe('As part of the sql refresh workshop', () => {
 	it('you should be able to change a given Male garment to a Unisex garment', async () => {
 
 		// use db.one with an update sql statement
-		const result = await db.one('update garment set gender = $1 where description = $2', ['Unisex','Red hooded jacket']);
+		await db.one('update garment set gender = $1 where gender = $2 and description = $3 returning $4', ['Male','Unisex', 'Red hooded jacket', 'success']);
 		
-		// const result = await db.one('select * from garment where description = $1', ['Red hooded jacket'])
-		console.log(result);
-		
-		// write your code above this line
-		// UPDATE table_name
-		// SET column1 = value1, column2 = value2, ...
-		// WHERE condition;
-
 		
 		const gender_sql = 'select gender from garment where description = $1'
 		const gender = await db.one(gender_sql, ['Red hooded jacket'], r => r.gender);
@@ -88,7 +80,13 @@ describe('As part of the sql refresh workshop', () => {
 	it('you should be able to add 2 Male & 3 Female garments', async () => {
 
 		// use db.none - change code below here...
-		await db.none('insert into garment (description, img, season, gender, price)  values ($1, $2, $3, $4, $5')
+		const addGarments = `insert into garment(description, img, season, gender,price) values($1, $2, $3, $4, $5)`;
+	
+		await db.none(addGarments, ['Short Sleeve T-shirt', 't-128x128-455135.png', 'Summer', 'Male', '79.25']);
+		await db.none(addGarments, ['Red Jersey', 'sweater-128x128-455131.png', 'Winter', 'Male', '599.99']);
+		await db.none(addGarments, ['Vest', 'tank-128x128-455134.png', 'Summer', 'Female', '29.99']);
+		await db.none(addGarments, ['Leggings(Brown)', 'track-128x128-455132.png', 'All Seasons', 'Female', '89.99']);
+		await db.none(addGarments, ['Orange Dress', 'tunic-128x128-455137.png', 'Summer', 'Female', '399.99']);
 
 		// write your code above this line
 
@@ -104,7 +102,7 @@ describe('As part of the sql refresh workshop', () => {
 	it('you should be able to group garments by gender and count them', async () => {
 
 		// and below this line for this function will
-	const garmentsGrouped =	await db.many('select count(*) from garment where gender = $1 and gender = $2 and gender = $3', ['Male','Female','Unisex']);
+	const garmentsGrouped =	await db.many('select count(*), gender from garment group by gender');
 		
 		// write your code above this line
 
