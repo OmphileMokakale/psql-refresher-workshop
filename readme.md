@@ -1,3 +1,5 @@
+[![Build Status](https://app.travis-ci.com/OmphileMokakale/psql-refresher-workshop.svg?branch=main)](https://app.travis-ci.com/OmphileMokakale/psql-refresher-workshop)
+
 # psql refresher workshop
 
 Fix all the failing tests. An refresh your sql knowledge in the process.
