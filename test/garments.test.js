@@ -68,11 +68,17 @@ describe('As part of the sql refresh workshop', () => {
 	it('you should be able to change a given Male garment to a Unisex garment', async () => {
 
 		// use db.one with an update sql statement
-		await db.one('update garment set gender = $1 where gender = $2 and description = $3 returning $4', ['Male','Unisex', 'Red hooded jacket', 'success']);
+
+	try {
+		 db.one(`update garment set gender = 'Unisex' where  description = 'Red hooded jacket'`);
+	} catch (error) {
+		console.log(error);
+	}
 		
 		
 		const gender_sql = 'select gender from garment where description = $1'
 		const gender = await db.one(gender_sql, ['Red hooded jacket'], r => r.gender);
+		console.log(gender);
 		assert.equal('Unisex', gender);
 
 	});
